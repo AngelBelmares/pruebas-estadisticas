@@ -42,12 +42,16 @@ def calcular_probabilidades_huecos(n):
 
 
 def calcular_frecuencias_esperadas(probabilidades_por_hueco, total_muestra):
+    global esFiable
+    esFiable = True
     N = total_muestra
     probs = probabilidades_por_hueco
     frecuencias_esperadas = [0.0] * (n + 1)
     
     for i in range(n + 1):
         frecuencias_esperadas[i] = probs[i] * N
+        if frecuencias_esperadas[i] < 5:
+            esFiable = False
     
     return frecuencias_esperadas
 
@@ -94,11 +98,16 @@ def imprimir_resultados(chi2, valor_critico, probabilidades,  frecuencias_espera
     print("\nChi-Cuadrado: ", round(chi2, 5))
     print("Valor Critico: ", round(valor_critico, 5))
     if chi2 < valor_critico:
-        return print("\nDado que ", round(chi2, 5), "<", round(valor_critico, 5), 
-                    " se dice que los numeros aleatorios pasan la prueba de uniformidad")
-
-    return print("\nDado que ", round(chi2, 5), ">", round(valor_critico, 5), 
-                " se dice que los numeros aleatorios NO pasan la prueba de uniformidad")
+        print("\nDado que ", round(chi2, 5), "<", round(valor_critico, 5), 
+        " se dice que los numeros aleatorios pasan la prueba de uniformidad")
+    else:
+        print("\nDado que ", round(chi2, 5), ">", round(valor_critico, 5), 
+        " se dice que los numeros aleatorios NO pasan la prueba de uniformidad")
+    
+    if esFiable is False:
+        print("\n\n\t\t*AVISO*\nYa que hay valores de Frecuencias Esperadas menores a 5 no se debe confiar en el resultado de la prueba.")
+        print("Se recomienda usar mas datos o menos subintervalos para obtener un resultado mas confiable.")
+    return
 
 
 # Pedir los parametros de inicio

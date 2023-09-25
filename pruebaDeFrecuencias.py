@@ -27,11 +27,15 @@ def leer_archivo(path):
     return valores
 
 def calcular_frecuencias_esperadas(num_subintervalos, total_muestra):
+    global esFiable
+    esFiable = True
     n = num_subintervalos
     N = total_muestra
     valores_fe = [None] * n
     for i in range(n):
         valores_fe[i] = (N / n)
+        if valores_fe[i] < 5:
+            esFiable = False
     
     return valores_fe
 
@@ -69,11 +73,16 @@ def imprimir_resultados(chi2, valor_critico, frecuencias_esperadas, frecuencias_
     print("\nChi-Cuadrado: ", round(chi2, 5))
     print("Valor Critico: ", round(valor_critico, 5))
     if chi2 < valor_critico:
-        return print("\nDado que ", round(chi2, 5), "<", round(valor_critico, 5), 
-                    " se dice que los numeros aleatorios pasan la prueba de uniformidad")
-
-    return print("\nDado que ", round(chi2, 5), ">", round(valor_critico, 5), 
-                " se dice que los numeros aleatorios NO pasan la prueba de uniformidad")
+        print("\nDado que ", round(chi2, 5), "<", round(valor_critico, 5), 
+        " se dice que los numeros aleatorios pasan la prueba de uniformidad")
+    else:
+        print("\nDado que ", round(chi2, 5), ">", round(valor_critico, 5), 
+        " se dice que los numeros aleatorios NO pasan la prueba de uniformidad")
+    
+    if esFiable is False:
+        print("\n\n\t\t*AVISO*\nYa que hay valores de Frecuencias Esperadas menores a 5 no se debe confiar en el resultado de la prueba.")
+        print("Se recomienda usar mas datos o menos subintervalos para obtener un resultado mas confiable.")
+    return
              
 
 # Pedir los parametros de inicio

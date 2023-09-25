@@ -38,6 +38,8 @@ def formar_parejas(secuencia_numeros):
 
 
 def calcular_frecuencias_esperadas(num_subintervalos, total_muestra):
+    global esFiable
+    esFiable = True
     n = num_subintervalos
     N = total_muestra
     valores_fe = [[None] * n for _ in range(n)]
@@ -45,6 +47,9 @@ def calcular_frecuencias_esperadas(num_subintervalos, total_muestra):
     for i in range(n):
         for j in range(n):
             valores_fe[i][j] = ((N - 1) / n**2)
+            if valores_fe[i][j] < 5:
+                esFiable = False
+            
     
     return valores_fe
 
@@ -83,7 +88,7 @@ def imprimir_resultados(chi2, valor_critico, frecuencias_esperadas, frecuencias_
     u = n
     print("\nTabla de frecuencias Esperadas\n")
     for i in range(len(frecuencias_esperadas) - 1, -1, -1):
-        print(round((1/n * u), 5) ,frecuencias_esperadas[i])
+        print(round((1/n * u), 2) ,frecuencias_esperadas[i])
         u = u - 1
         subintervalos.append((i + 1)/n)
     print("     ", [x for x in subintervalos[::-1]])
@@ -91,18 +96,23 @@ def imprimir_resultados(chi2, valor_critico, frecuencias_esperadas, frecuencias_
     print("\nTabla de frecuencias Observadas\n")
     u = n
     for i in range(len(frecuencias_observadas) - 1, -1, -1):
-        print(round((1/n * u), 1) ,frecuencias_observadas[i])
+        print(round((1/n * u), 2) ,frecuencias_observadas[i])
         u = u - 1
     print([x for x in subintervalos[::-1]])
     
     print("\nChi-Cuadrado: ", round(chi2, 5))
     print("Valor Critico: ", round(valor_critico, 5))
     if chi2 < valor_critico:
-        return print("\nDado que ", round(chi2, 5), "<", round(valor_critico, 5), 
-                    " se dice que los numeros aleatorios pasan la prueba de uniformidad")
-
-    return print("\nDado que ", round(chi2, 5), ">", round(valor_critico, 5), 
-                " se dice que los numeros aleatorios NO pasan la prueba de uniformidad")
+        print("\nDado que ", round(chi2, 5), "<", round(valor_critico, 5), 
+        " se dice que los numeros aleatorios pasan la prueba de uniformidad")
+    else:
+        print("\nDado que ", round(chi2, 5), ">", round(valor_critico, 5), 
+        " se dice que los numeros aleatorios NO pasan la prueba de uniformidad")
+    
+    if esFiable is False:
+        print("\n\n\t\t*AVISO*\nYa que hay valores de Frecuencias Esperadas menores a 5 no se debe confiar en el resultado de la prueba.")
+        print("Se recomienda usar mas datos o menos subintervalos para obtener un resultado mas confiable.")
+    return
              
 
 # Pedir los parametros de inicio
